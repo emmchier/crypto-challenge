@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- Primary Color Pallette -->
+    <color name="primaryColor">#192734</color>
+    <color name="primaryLightColor">#414f5e</color>
+    <color name="primaryDarkColor">#00000e</color>
+    <color name="secondaryColor">#38444d</color>
+    <color name="secondaryLightColor">#626f79</color>
+    <color name="secondaryDarkColor">#111d25</color>
+
+    <!-- Secondary Color pallette -->
+
+    <color name="primaryTextColor">#8798A6</color>
+    <color name="secondaryTextColor">#38444D</color>
+    <color name="iconTintColor">@color/secondaryTextColor</color>
+    <color name="disableTintColor">#B0BEC5</color>
+    <color name="successColor">#1fA1f1</color>
+    <color name="errorColor">#E04F40</color>
+    <color name="grayDarkBase">#676565</color>
+    <color name="active">#3483FA</color>
+    <color name="separator_color">#ECEFF1</color>
+    <color name="tagDarkColor">#15202B</color>
+    <color name="base_stroke_color">@color/disableTintColor</color>
+    <color name="white">#ffffff</color>
+    <color name="white_semi">#f2f2f2</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="semiTransparent">#99000000</color>
+    <color name="opaque">#59000000</color>
+    <color name="overlay">#8A000000</color>
+    <color name="search_text_color">#929495</color>
 </resources>

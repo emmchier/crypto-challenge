@@ -19,8 +19,12 @@ public class CoinActivity extends AppCompatActivity {
                 R.id.navigation_coin_list,
                 R.id.navigation_coin_detail)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavController navController =
+                Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(
+                this,
+                navController,
+                appBarConfiguration);
     }
 
 }

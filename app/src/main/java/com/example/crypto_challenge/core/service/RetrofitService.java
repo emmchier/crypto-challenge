@@ -1,4 +1,24 @@
 package com.example.crypto_challenge.core.service;
+import com.example.crypto_challenge.utils.Const;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+/*
+ * Retrofit2 Singleton
+ */
 public class RetrofitService {
+
+    public static Retrofit retrofit;
+
+    public static Retrofit getInstance() {
+        if (retrofit == null) {
+            OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
+            Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
+                    .baseUrl(Const.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create());
+            retrofit = retrofitBuilder.client(httpclient.build()).build();
+        }
+        return retrofit;
+    }
 }
