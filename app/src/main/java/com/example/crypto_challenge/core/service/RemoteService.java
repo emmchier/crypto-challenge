@@ -1,4 +1,5 @@
 package com.example.crypto_challenge.core.service;
+import com.example.crypto_challenge.core.entities.CoinDataEntity;
 import com.example.crypto_challenge.core.entities.CoinEntity;
 
 import java.util.List;
@@ -15,6 +16,6 @@ public interface RemoteService {
     Call<List<CoinEntity>> getCryptoCoins();
 
     @GET("coins/{id}")
-    Call<CoinEntity> getCoin(
+    Call<CoinDataEntity> getCoin(
             @Path("id") String id);
 }

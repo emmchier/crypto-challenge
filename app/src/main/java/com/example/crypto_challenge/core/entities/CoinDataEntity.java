@@ -1,7 +1,4 @@
 package com.example.crypto_challenge.core.entities;
-
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 public class CoinDataEntity {

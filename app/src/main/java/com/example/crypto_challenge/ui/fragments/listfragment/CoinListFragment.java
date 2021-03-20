@@ -28,6 +28,8 @@ import butterknife.ButterKnife;
 
 public class CoinListFragment extends Fragment implements CoinListAdapter.CoinListener {
 
+    public static final String COIN_ID = "id";
+
     private CoinListAdapter adapter;
     private CoinListViewModel coinListViewModel;
 
@@ -100,8 +102,10 @@ public class CoinListFragment extends Fragment implements CoinListAdapter.CoinLi
 
     @Override
     public void goToDetail(CoinEntity coinEntity) {
+        Bundle bundle = new Bundle();
+        bundle.putString(COIN_ID, coinEntity.getId());
         NavHostFragment
                 .findNavController(CoinListFragment.this)
-                .navigate(R.id.action_navigation_coin_list_to_navigation_coin_detail);
+                .navigate(R.id.action_navigation_coin_list_to_navigation_coin_detail, bundle);
     }
 }

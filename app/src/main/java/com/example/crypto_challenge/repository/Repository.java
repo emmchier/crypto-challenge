@@ -2,6 +2,7 @@ package com.example.crypto_challenge.repository;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.crypto_challenge.core.entities.CoinDataEntity;
 import com.example.crypto_challenge.core.entities.CoinEntity;
 import com.example.crypto_challenge.core.service.RemoteService;
 import com.example.crypto_challenge.core.service.RetrofitService;
@@ -19,9 +20,11 @@ import retrofit2.Response;
 public class Repository {
 
     private final MutableLiveData<ServiceResult<List<CoinEntity>>> results;
+    private final MutableLiveData<ServiceResult<CoinDataEntity>> result;
 
     public Repository() {
         this.results = new MutableLiveData<>();
+        this.result = new MutableLiveData<>();
     }
 
     public MutableLiveData<ServiceResult<List<CoinEntity>>> getCoinList() {
@@ -58,5 +61,41 @@ public class Repository {
                 }
             });
         return results;
+    }
+
+    public MutableLiveData<ServiceResult<CoinDataEntity>> getCoinById(String coinId) {
+
+        result.setValue(new ServiceResult<>(
+                ServiceResult.Status.LOADING,
+                null,
+                null));
+
+        RetrofitService.getInstance().create(RemoteService.class)
+                .getCoin(coinId)
+                .enqueue(new Callback<CoinDataEntity>() {
+                    @Override
+                    public void onResponse(Call<CoinDataEntity> call,
+                                           Response<CoinDataEntity> response) {
+                        if (response.isSuccessful()) {
+                            result.setValue(new ServiceResult(
+                                    ServiceResult.Status.SUCCESS,
+                                    response.body(),
+                                    null));
+                        } else {
+                            result.setValue(new ServiceResult(
+                                    ServiceResult.Status.ERROR,
+                                    null,
+                                    "An error has occurred. Please try again"));
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<CoinDataEntity> call, Throwable t) {
+                        result.setValue(new ServiceResult(
+                                ServiceResult.Status.ERROR,
+                                null,
+                                "An error has occurred. Please try again"));
+                    }
+                });
+        return result;
     }
 }
