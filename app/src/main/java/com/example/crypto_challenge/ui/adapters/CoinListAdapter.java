@@ -3,11 +3,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.crypto_challenge.R;
 import com.example.crypto_challenge.core.entities.CoinEntity;
 
@@ -73,6 +75,9 @@ public class CoinListAdapter extends RecyclerView.Adapter {
         @BindView(R.id.textViewCoinName)
         TextView textViewCoinName;
 
+        @BindView(R.id.textViewTicker)
+        TextView textViewTicker;
+
         public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -84,8 +89,10 @@ public class CoinListAdapter extends RecyclerView.Adapter {
                 }
             } );
         }
+
         public void loadAllCoins(CoinEntity coin) {
             if(coin.getName() != null){
+                textViewTicker.setText(coin.getSymbol());
                 textViewCoinName.setText(coin.getName());
             }
         }

@@ -63,39 +63,38 @@ public class Repository {
         return results;
     }
 
-    public MutableLiveData<ServiceResult<CoinDataEntity>> getCoinById(String coinId) {
+    public void getCoinById(String coinId, MutableLiveData<ServiceResult<CoinDataEntity>> coinById) {
 
-        result.setValue(new ServiceResult<>(
-                ServiceResult.Status.LOADING,
-                null,
-                null));
+        coinById.setValue(new ServiceResult<>(
+            ServiceResult.Status.LOADING,
+            null,
+            null));
 
         RetrofitService.getInstance().create(RemoteService.class)
-                .getCoin(coinId)
-                .enqueue(new Callback<CoinDataEntity>() {
-                    @Override
-                    public void onResponse(Call<CoinDataEntity> call,
-                                           Response<CoinDataEntity> response) {
-                        if (response.isSuccessful()) {
-                            result.setValue(new ServiceResult(
-                                    ServiceResult.Status.SUCCESS,
-                                    response.body(),
-                                    null));
-                        } else {
-                            result.setValue(new ServiceResult(
-                                    ServiceResult.Status.ERROR,
-                                    null,
-                                    "An error has occurred. Please try again"));
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<CoinDataEntity> call, Throwable t) {
-                        result.setValue(new ServiceResult(
+            .getCoin(coinId)
+            .enqueue(new Callback<CoinDataEntity>() {
+                @Override
+                public void onResponse(Call<CoinDataEntity> call,
+                                       Response<CoinDataEntity> response) {
+                    if (response.isSuccessful()) {
+                        coinById.postValue(new ServiceResult(
+                                ServiceResult.Status.SUCCESS,
+                                response.body(),
+                                null));
+                    } else {
+                        coinById.setValue(new ServiceResult(
                                 ServiceResult.Status.ERROR,
                                 null,
                                 "An error has occurred. Please try again"));
                     }
-                });
-        return result;
+                }
+                @Override
+                public void onFailure(Call<CoinDataEntity> call, Throwable t) {
+                    coinById.setValue(new ServiceResult(
+                            ServiceResult.Status.ERROR,
+                            null,
+                            "An error has occurred. Please try again"));
+                }
+            });
     }
 }

@@ -13,19 +13,17 @@ import java.util.List;
 /*
  * Coin List Viewmodel
  */
-public class CoinListViewModel extends ViewModel {
+public class CoinViewModel extends ViewModel {
 
     private MutableLiveData<ServiceResult<List<CoinEntity>>> coinEntityList;
     private MutableLiveData<ServiceResult<CoinDataEntity>> coinById;
-    private String id;
     private Repository repository;
 
-    public CoinListViewModel() {
+    public CoinViewModel() {
         coinEntityList = new MutableLiveData<>();
         coinById = new MutableLiveData<>();
         repository = new Repository();
         getCoinList();
-        getCoinById(id);
     }
 
     private void getCoinList() {
@@ -37,7 +35,7 @@ public class CoinListViewModel extends ViewModel {
     }
 
     public void getCoinById(String id) {
-        coinById = repository.getCoinById(id);
+        repository.getCoinById(id, coinById);
     }
 
     public LiveData<ServiceResult<CoinDataEntity>> getCoin() {

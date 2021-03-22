@@ -1,5 +1,6 @@
 package com.example.crypto_challenge.ui.fragments.listfragment;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.crypto_challenge.R;
+import com.example.crypto_challenge.core.entities.CoinDataEntity;
 import com.example.crypto_challenge.core.entities.CoinEntity;
 import com.example.crypto_challenge.core.service.ServiceResult;
 import com.example.crypto_challenge.ui.adapters.CoinListAdapter;
-import com.example.crypto_challenge.viewmodels.CoinListViewModel;
+import com.example.crypto_challenge.viewmodels.CoinViewModel;
 
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class CoinListFragment extends Fragment implements CoinListAdapter.CoinLi
     public static final String COIN_ID = "id";
 
     private CoinListAdapter adapter;
-    private CoinListViewModel coinListViewModel;
+    private CoinViewModel coinViewModel;
 
     @BindView(R.id.recyclerViewCoinList)
     RecyclerView recyclerViewCoinList;
@@ -39,7 +42,16 @@ public class CoinListFragment extends Fragment implements CoinListAdapter.CoinLi
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
+
     public CoinListFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
+        setEnterTransition(inflater.inflateTransition(R.transition.fade));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -70,34 +82,35 @@ public class CoinListFragment extends Fragment implements CoinListAdapter.CoinLi
     }
 
     private void observeViewmodelData() {
-        coinListViewModel =
-                new ViewModelProvider(this).get(CoinListViewModel.class);
+
+        coinViewModel =
+                new ViewModelProvider(this).get(CoinViewModel.class);
 
         final Observer<ServiceResult<List<CoinEntity>>> dataContainerObserver =
                 new Observer<ServiceResult<List<CoinEntity>>>() {
-            @Override
-            public void onChanged(ServiceResult<List<CoinEntity>> dataContainer) {
-                switch(dataContainer.getStatus()) {
-                    case SUCCESS:
-                        if (dataContainer.getData() != null) {
-                            progressBar.setVisibility(View.GONE);
-                            adapter.loadList(dataContainer.getData());
+                    @Override
+                    public void onChanged(ServiceResult<List<CoinEntity>> dataContainer) {
+                        switch(dataContainer.getStatus()) {
+                            case SUCCESS:
+                                if (dataContainer.getData() != null) {
+                                    progressBar.setVisibility(View.GONE);
+                                    adapter.loadList(dataContainer.getData());
+                                }
+                                break;
+                            case ERROR:
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(
+                                        getContext(),
+                                        getString(R.string.unexpected_error),
+                                        Toast.LENGTH_SHORT).show();
+                                break;
+                            case LOADING:
+                                progressBar.setVisibility(View.VISIBLE);
+                                break;
                         }
-                        break;
-                    case ERROR:
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(
-                            getContext(),
-                            getString(R.string.unexpected_error),
-                            Toast.LENGTH_SHORT).show();
-                        break;
-                    case LOADING:
-                        progressBar.setVisibility(View.VISIBLE);
-                        break;
-                }
-            }
-        };
-        coinListViewModel.coinList().observe(requireActivity(), dataContainerObserver);
+                    }
+                };
+        coinViewModel.coinList().observe(requireActivity(), dataContainerObserver);
     }
 
     @Override

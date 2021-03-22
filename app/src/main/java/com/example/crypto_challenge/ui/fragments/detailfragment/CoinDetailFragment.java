@@ -1,8 +1,11 @@
 package com.example.crypto_challenge.ui.fragments.detailfragment;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,24 +15,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.example.crypto_challenge.R;
 import com.example.crypto_challenge.core.entities.CoinDataEntity;
-import com.example.crypto_challenge.core.entities.CoinEntity;
 import com.example.crypto_challenge.core.service.ServiceResult;
-import com.example.crypto_challenge.ui.adapters.CoinListAdapter;
 import com.example.crypto_challenge.ui.fragments.listfragment.CoinListFragment;
-import com.example.crypto_challenge.viewmodels.CoinListViewModel;
-
-import java.util.List;
+import com.example.crypto_challenge.viewmodels.CoinViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CoinDetailFragment extends Fragment {
 
-    private CoinListViewModel coinListViewModel;
+    private CoinViewModel coinViewModel;
     private String idCoin;
 
     @BindView(R.id.progressBarDetail)
@@ -38,7 +37,18 @@ public class CoinDetailFragment extends Fragment {
     @BindView(R.id.textViewCoinId)
     TextView textViewCoinId;
 
+    @BindView(R.id.imageCoin)
+    ImageView imageCoin;
+
     public CoinDetailFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setExitTransition(inflater.inflateTransition(R.transition.slide_left));
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,10 +74,10 @@ public class CoinDetailFragment extends Fragment {
     }
 
     private void observeViewmodelData() {
-        coinListViewModel =
-                new ViewModelProvider(this).get(CoinListViewModel.class);
+        coinViewModel =
+                new ViewModelProvider(this).get(CoinViewModel.class);
 
-        final Observer<ServiceResult<CoinDataEntity>> dataContainerObserver =
+        final Observer<ServiceResult<CoinDataEntity>> coinContainer =
                 new Observer<ServiceResult<CoinDataEntity>>() {
                     @Override
                     public void onChanged(ServiceResult<CoinDataEntity> dataContainer) {
@@ -75,7 +85,13 @@ public class CoinDetailFragment extends Fragment {
                             case SUCCESS:
                                 if (dataContainer.getData() != null) {
                                     progressBar.setVisibility(View.GONE);
-                                    textViewCoinId.setText(coinListViewModel.getCoin().getValue().getData().getSymbol());
+                                    textViewCoinId.setText(dataContainer.getData().getSymbol());
+                                     Glide.with(getContext())
+                                        .load(dataContainer.getData().getImage().getSmall())
+                                        .placeholder(R.mipmap.ic_launcher)
+                                        .circleCrop()
+                                        .error(R.mipmap.ic_launcher)
+                                        .into(imageCoin);
                                 }
                                 break;
                             case ERROR:
@@ -91,6 +107,7 @@ public class CoinDetailFragment extends Fragment {
                         }
                     }
                 };
-        coinListViewModel.getCoin().observe(requireActivity(), dataContainerObserver);
+        coinViewModel.getCoin().observe(requireActivity(), coinContainer);
+        coinViewModel.getCoinById(idCoin);
     }
 }
