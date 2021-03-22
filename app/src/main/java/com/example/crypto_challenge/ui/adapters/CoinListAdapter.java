@@ -91,7 +91,7 @@ public class CoinListAdapter extends RecyclerView.Adapter {
         }
 
         public void loadAllCoins(CoinEntity coin) {
-            if(coin.getName() != null){
+            if (coin != null) {
                 textViewTicker.setText(coin.getSymbol());
                 textViewCoinName.setText(coin.getName());
             }

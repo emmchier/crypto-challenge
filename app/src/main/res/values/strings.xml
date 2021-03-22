@@ -3,4 +3,14 @@
     <string name="title_coin_list">Coin List</string>
     <string name="title_coin_detail">Coin Detail</string>
     <string name="unexpected_error">An error has occurred. Please, try again</string>
+    <string name="coin_name">Coin Name</string>
+    <string name="market_capital">Market Capital</string>
+    <string name="peso_sign">$</string>
+    <string name="ars">ARS</string>
+    <string name="change_ars">Change (ARS)</string>
+    <string name="_24hs">24Hs.</string>
+    <string name="_1m">1M</string>
+    <string name="circulating">Circulating</string>
+    <string name="ticker">Ticker</string>
+    <string name="_0_0">0.0</string>
 </resources>

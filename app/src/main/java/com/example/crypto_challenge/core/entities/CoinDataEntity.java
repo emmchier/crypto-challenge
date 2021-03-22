@@ -3,6 +3,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class CoinDataEntity {
 
+    @SerializedName("name")
+    private String name;
     @SerializedName("symbol")
     private String symbol;
     @SerializedName("image")
@@ -10,10 +12,19 @@ public class CoinDataEntity {
     @SerializedName("market_data")
     private MarketData market_data;
 
-    public CoinDataEntity(String symbol, Image image, MarketData market_data) {
+    public CoinDataEntity(String name, String symbol, Image image, MarketData market_data) {
+        this.name = name;
         this.symbol = symbol;
         this.image = image;
         this.market_data = market_data;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSymbol() {

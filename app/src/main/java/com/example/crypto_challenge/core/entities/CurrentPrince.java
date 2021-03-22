@@ -1,8 +1,8 @@
 package com.example.crypto_challenge.core.entities;
-
 import com.google.gson.annotations.SerializedName;
 
 public class CurrentPrince {
+
     @SerializedName("ars")
     private Double ars;
 

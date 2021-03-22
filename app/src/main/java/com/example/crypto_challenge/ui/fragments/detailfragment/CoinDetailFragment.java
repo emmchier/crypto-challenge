@@ -1,4 +1,5 @@
 package com.example.crypto_challenge.ui.fragments.detailfragment;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.crypto_challenge.R;
@@ -34,11 +36,29 @@ public class CoinDetailFragment extends Fragment {
     @BindView(R.id.progressBarDetail)
     ProgressBar progressBar;
 
-    @BindView(R.id.textViewCoinId)
-    TextView textViewCoinId;
+    @BindView(R.id.imageViewCoinLogo)
+    ImageView imageViewCoinLogo;
 
-    @BindView(R.id.imageCoin)
-    ImageView imageCoin;
+    @BindView(R.id.textViewCoinDetailName)
+    TextView textViewCoinDetailName;
+
+    @BindView(R.id.textViewCurrencyPrice)
+    TextView textViewCurrencyPrice;
+
+    @BindView(R.id.textViewChangeDay)
+    TextView textViewChangeDay;
+
+    @BindView(R.id.textViewChangeWeek)
+    TextView textViewChangeWeek;
+
+    @BindView(R.id.textViewChangeMonth)
+    TextView textViewChangeMonth;
+
+    @BindView(R.id.textViewSupply)
+    TextView textViewSupply;
+
+    @BindView(R.id.textViewDetailTicker)
+    TextView textViewDetailTicker;
 
     public CoinDetailFragment() {
     }
@@ -85,13 +105,7 @@ public class CoinDetailFragment extends Fragment {
                             case SUCCESS:
                                 if (dataContainer.getData() != null) {
                                     progressBar.setVisibility(View.GONE);
-                                    textViewCoinId.setText(dataContainer.getData().getSymbol());
-                                     Glide.with(getContext())
-                                        .load(dataContainer.getData().getImage().getSmall())
-                                        .placeholder(R.mipmap.ic_launcher)
-                                        .circleCrop()
-                                        .error(R.mipmap.ic_launcher)
-                                        .into(imageCoin);
+                                    setDetailFields(dataContainer.getData());
                                 }
                                 break;
                             case ERROR:
@@ -109,5 +123,48 @@ public class CoinDetailFragment extends Fragment {
                 };
         coinViewModel.getCoin().observe(requireActivity(), coinContainer);
         coinViewModel.getCoinById(idCoin);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setDetailFields(CoinDataEntity coin) {
+        if (coin != null) {
+            if (coin.getImage().getSmall() != null || coin.getImage().getSmall() != "") {
+                Glide.with(getContext())
+                        .load(coin.getImage().getSmall())
+                        .placeholder(R.drawable.ic_crypto_app)
+                        .error(R.drawable.ic_crypto_app)
+                        .circleCrop()
+                        .into(imageViewCoinLogo);
+            } else {
+                imageViewCoinLogo.setImageResource(R.drawable.ic_crypto_app);
+            }
+            textViewCoinDetailName.setText(coin.getName());
+            textViewDetailTicker.setText(coin.getSymbol());
+            if (coin.getMarket_data().getCurrent_price().getArs() != null) {
+                textViewCurrencyPrice.setText(String.valueOf(coin.getMarket_data().getCurrent_price().getArs()));
+            } else {
+                textViewCurrencyPrice.setText("0.0");
+            }
+            if (coin.getMarket_data().getPrice_change_percentage_24h_in_currency().getArs() != null) {
+                textViewChangeDay.setText(String.valueOf(coin.getMarket_data().getPrice_change_percentage_24h_in_currency().getArs()));
+            } else {
+                textViewChangeDay.setText("0.0");
+            }
+            if (coin.getMarket_data().getPrice_change_percentage_7d_in_currency().getArs() != null) {
+                textViewChangeWeek.setText(String.valueOf(coin.getMarket_data().getPrice_change_percentage_7d_in_currency().getArs()));
+            } else {
+                textViewChangeWeek.setText("0.0");
+            }
+            if (coin.getMarket_data().getPrice_change_percentage_30d_in_currency().getArs() != null) {
+                textViewChangeMonth.setText(String.valueOf(coin.getMarket_data().getPrice_change_percentage_30d_in_currency().getArs()));
+            } else {
+                textViewChangeMonth.setText("0.0");
+            }
+            if (coin.getMarket_data().getCirculating_supply() != null) {
+                textViewSupply.setText(String.valueOf(coin.getMarket_data().getCirculating_supply()));
+            } else {
+                textViewSupply.setText("0.0");
+            }
+        }
     }
 }
